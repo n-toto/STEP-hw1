@@ -6,6 +6,7 @@ import collections
 dic_16 = []
 with open("dictionary.txt", 'r') as f:
     for line in f:
+        line = line.replace("qu", "q")
         dic_16.append(line.replace("\n", ""))
 
 #make a small dictionary that contains words which is consisted of  only given characters
@@ -27,19 +28,22 @@ def mk_match(new_dic, s):
     return l
 
 def point(word):
-    count = 0
-    word = re.sub("QU", "Q", word, re.I)
-    c3 = re.findall("[JKXZQ]", word, re.I)
+    if word == '':
+        return 0
+    count = 1
+    c3 = re.findall("[jkqxz]", word)
     count += 3 * len(c3)
-    c2 = re.findall("[CFHLMPVWY]", word, re.I)
+    c2 = re.findall("[cfhlmpvwy]", word)
     count += 2 * len(c2)
-    c1 = re.findall("[^JKQXZCFHLMPVWY]", word, re.I)
+    c1 = re.findall("[^jkqxzcfhlmpvwy]", word)
     count += len(c1)
     return (count) ** 2
 
 def mk_best_word(original):
     new_dic = mk_new_dic(original)
     word_list = mk_match(new_dic, original)
+    if word_list == []:
+        return "", 0
     d = {}
     for word in word_list:
         d[word] = point(word)
@@ -47,6 +51,11 @@ def mk_best_word(original):
     return d[0], point(d[0])
 
 #receive16 characters
+score = 0
 for i in range(10):
-    original = list(input().lower().split())
-    print(mk_best_word(original))
+    original = input().lower()
+    original = original.replace("qu", "q")
+    w, c = mk_best_word(original)
+    score += c
+    print(w, c)
+    
