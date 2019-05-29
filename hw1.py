@@ -12,7 +12,7 @@ try:
         dic_16 = list(f.read().decode('utf-8').split())   
 except urllib.error.URLError as e:
     print(e.reason)
-    
+
 # Make a small dictionary that contains words consisting only of the given characters
 def mk_new_dic(s):
     new_dic = []
@@ -27,7 +27,8 @@ def mk_match(new_dic, s):
     counter = collections.Counter(s)
     l = []
     for word in new_dic:
-        if all(map(lambda items: word.count(items[0]) <= items[1], counter.items())) == True:
+        letters = collections.Counter(word)
+        if letters & counter == letters:
             l.append(word)
     return l
 
