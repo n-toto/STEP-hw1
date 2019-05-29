@@ -1,14 +1,18 @@
 import copy
 import re
 import collections
+import urllib.request
+import urllib.error
 
 # Import dictionary containing words whose word length is 16 or less
+url = "https://icanhazwordz.appspot.com/dictionary.words"
 dic_16 = []
-with open("dictionary.txt", 'r') as f:
-    for line in f:
-        line = line.replace("qu", "q")
-        dic_16.append(line.replace("\n", ""))
-
+try:
+    with urllib.request.urlopen(url) as f:
+        dic_16 = list(f.read().decode('utf-8').split())   
+except urllib.error.URLError as e:
+    print(e.reason)
+    
 # Make a small dictionary that contains words consisting only of the given characters
 def mk_new_dic(s):
     new_dic = []
