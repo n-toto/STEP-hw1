@@ -3,15 +3,17 @@ import re
 import collections
 import urllib.request
 import urllib.error
+import sys
 
 # Import dictionary containing words whose word length is 16 or less
 url = "https://icanhazwordz.appspot.com/dictionary.words"
 dic_16 = []
 try:
     with urllib.request.urlopen(url) as f:
-        dic_16 = list(f.read().decode('utf-8').split())   
+        dic_16 = f.read().decode('utf-8').replace('qu', 'q').split() 
 except urllib.error.URLError as e:
     print(e.reason)
+    sys.exit()
 
 # Make a small dictionary that contains words consisting only of the given characters
 def mk_new_dic(s):
@@ -56,8 +58,8 @@ def mk_best_word(original):
     score = {}
     for word in word_list:
         score[word.replace("q", "qu")] = point(word)
-    score = sorted(score, key = lambda x : score[x], reverse = True)
-    return score[0], point(score[0])
+    best_word = max(score, key = lambda x : score[x], reverse = True)
+    return best_word, point(best_word)
 
 # Interactively read 16 letters 10 times.
 score = 0
